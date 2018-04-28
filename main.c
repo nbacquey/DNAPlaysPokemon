@@ -246,7 +246,6 @@ int main (int argc, char **argv){
 
   fclose(fasta_file);
 
-<<<<<<< HEAD
   test.bases = 0b011000110110101110010001;
   printf("%s\n",baseToString(test));
   transcript(test, &test2);
@@ -255,8 +254,6 @@ int main (int argc, char **argv){
   printf("%s\n",baseToString(test));
   transcript(test, &test2);
   printf("%s\n",AAToString(test2));
-=======
->>>>>>> 2251468a61fb9ec94f8f8e1f43f98964161afd56
   return 0;
   
 }
