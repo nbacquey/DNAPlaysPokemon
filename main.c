@@ -214,6 +214,38 @@ int main (int argc, char **argv){
   AQ test2;
   test.size = 12;
   test.options = 0;
+  test.bases = 0b011000110110;
+  printf("Enumération des bases %d %d %d %d %d %d\n",getBase(test,0),getBase(test,1),getBase(test,2),getBase(test,3),getBase(test,4),getBase(test,6));
+
+
+  FILE * fasta_file;
+  fasta_file = fopen("data/line-per-line.txt", "r");
+  if (NULL == fasta_file){
+    perror("opening file");
+    return (-1);
+  }
+
+  int c; // getc will send a char as an int
+  while((c = getc(fasta_file)) != -1) {
+    printf("read char: %c\n", c);
+    if (c == '\n') {
+      printf("this is a carriage return, thus I skip it \n");
+      continue;
+    }else if (c == '>') {
+      printf("this is a >, thus I skip : \n");
+      // Skip until the next newline:
+      do {
+        c = getc(fasta_file);
+        printf("%c-", c);
+      } while (c != -1 && c != '\n');
+      continue;
+    }else {
+      printf("to keep : %c\n", c);
+    }
+  }
+
+  fclose(fasta_file);
+
   test.bases = 0b011000110110101110010001;
   printf("%s\n",baseToString(test));
   transcript(test, &test2);
