@@ -42,20 +42,16 @@ int main (int argc, char **argv){
   printf("Enumération des bases %d %d %d %d %d %d\n",getBase(test,0),getBase(test,1),getBase(test,2),getBase(test,3),getBase(test,4),getBase(test,6));
 
 
-
   FILE * fasta_file;
-  char line[80];
-
   fasta_file = fopen("data/line-per-line.txt", "r");
   if (NULL == fasta_file){
     perror("opening file");
     return (-1);
   }
 
-  while (EOF != fscanf(fasta_file, " %[^\n]", line)){
-    // matches characters until a newline is encountered
-    // the newline character is left behind in the input stream.
-    printf("> %s\n", line);
+  int c; // getc will send a char as an int
+  while((c = getc(fasta_file)) != -1) {
+    printf("read char: %c\n", c);
   }
 
   fclose(fasta_file);
