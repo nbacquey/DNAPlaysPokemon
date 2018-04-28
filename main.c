@@ -40,6 +40,26 @@ int main (int argc, char **argv){
   test.options = 0;
   test.bases = 0b011000110110;
   printf("Enumération des bases %d %d %d %d %d %d\n",getBase(test,0),getBase(test,1),getBase(test,2),getBase(test,3),getBase(test,4),getBase(test,6));
+
+
+
+  FILE * fasta_file;
+  char line[80];
+
+  fasta_file = fopen("data/line-per-line.txt", "r");
+  if (NULL == fasta_file){
+    perror("opening file");
+    return (-1);
+  }
+
+  while (EOF != fscanf(fasta_file, " %[^\n]", line)){
+    // matches characters until a newline is encountered
+    // the newline character is left behind in the input stream.
+    printf("> %s\n", line);
+  }
+
+  fclose(fasta_file);
+
   return 0;
   
 }
