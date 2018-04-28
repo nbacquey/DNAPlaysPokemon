@@ -209,14 +209,7 @@ char* AAToString(AQ acids){
 
 
 
-int main (int argc, char **argv){
-  BD test;
-  AQ test2;
-  test.size = 12;
-  test.options = 0;
-  test.bases = 0b011000110110;
-  printf("Enumération des bases %d %d %d %d %d %d\n",getBase(test,0),getBase(test,1),getBase(test,2),getBase(test,3),getBase(test,4),getBase(test,6));
-
+int build_genome(){
 
   FILE * fasta_file;
   fasta_file = fopen("data/line-per-line.txt", "r");
@@ -245,6 +238,28 @@ int main (int argc, char **argv){
   }
 
   fclose(fasta_file);
+
+  return 0;
+
+}
+
+void testA(){
+
+  build_genome();
+
+}
+
+int main (int argc, char **argv){
+  BD test;
+  AQ test2;
+  test.size = 12;
+  test.options = 0;
+  test.bases = 0b011000110110;
+  printf("Enumération des bases %d %d %d %d %d %d\n",getBase(test,0),getBase(test,1),getBase(test,2),getBase(test,3),getBase(test,4),getBase(test,6));
+
+
+  testA();
+
 
   test.bases = 0b011000110110101110010001;
   printf("%s\n",baseToString(test));
