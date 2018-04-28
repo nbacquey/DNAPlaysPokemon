@@ -118,7 +118,35 @@ int build_genome(){
 
 }
 
+
+BD* newBD(char* DNA_sequence){
+  BD* genome_chunk = malloc (sizeof (BD));
+
+  genome_chunk->size = strlen(DNA_sequence);
+  genome_chunk->options = 0;
+
+  for (int i = 0; i < strlen(DNA_sequence); ++i){
+    printf("%d", i);
+    if (DNA_sequence[i] == 65){
+      setBase(genome_chunk, i, A);
+    }else if(DNA_sequence[i] == 84){
+      setBase(genome_chunk, i, T);
+    }else if(DNA_sequence[i] == 67){
+      setBase(genome_chunk, i, C);
+    }else if(DNA_sequence[i] == 71){
+      setBase(genome_chunk, i, G);
+    }
+  }
+  return genome_chunk;
+}
+
+
 void testA(){
+
+  char* DNA_sequence = "AAAAAAA\0";
+  BD* genome_chunk;
+  genome_chunk = newBD(DNA_sequence);
+  printf("================ %s\n",baseToString(*genome_chunk));
 
   build_genome();
 
