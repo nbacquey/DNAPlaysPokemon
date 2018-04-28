@@ -36,6 +36,7 @@
 #define BD baseDodecuplet
 #define AQ AAQuadruplet
 
+// basic structures for internal representation
 typedef struct baseDodecuplet {
   unsigned int size     :4;
   unsigned int bases    :24;
@@ -48,6 +49,14 @@ typedef struct AAQuadruplet {
   unsigned int options  :8;
 } AAQuadruplet;
 
+typedef struct DNAWrapper {
+  BD *bases;
+  unsigned int totalSize;
+  unsigned int structIndex;
+  unsigned int baseOffset;
+  unsigned char hasEnded;
+} DNAWrapper;
+
 char genCode[64] = {
   Phe,Leu,Leu,Phe,Tyr,End,Pyl,Tyr, //AAA AAT AAC AAG ATA ATT ATC ATG
   Cys,Sec,Trp,Cys,Ser,Ser,Ser,Ser, //ACA ACT ACC ACG AGA AGT AGC AGG
@@ -59,6 +68,8 @@ char genCode[64] = {
   Arg,Arg,Arg,Arg,Pro,Pro,Pro,Pro  //GCA GCT GCC GCG GGA GGT GGC GGG
   
 };
+
+//global variables for parsing bases
 
 int getBase(BD dodecuplet, int i){
   if(i >= dodecuplet.size)
@@ -80,6 +91,35 @@ int getAAcid(AQ quadruplet, int i){
   if(i >= quadruplet.size)
     return -1;
   return (quadruplet.acids >> (5*i)) & 0b11111 ;
+}
+
+//Functions for using DNAWrapper
+char nextBase(DNAWrapper *wrapper){
+  if(wrapper->hasEnded)
+    return -1;
+  BD basesStruct = wrapper->bases[wrapper->structIndex];
+  char base = getBase(basesStruct, wrapper->baseOffset);
+  unsigned int nextOffset = wrapper->baseOffset + 1;
+  if(wrapper->structIndex * 12 + nextOffset >= wrapper-> totalSize){
+    wrapper->hasEnded = 1;
+    return base;
+  }
+  if(nextOffset == 12){
+    ++(wrapper->structIndex);
+    nextOffset = 0;
+  }
+  wrapper->baseOffset = nextOffset;
+  return base;
+}
+
+DNAWrapper *makeWrapper(BD *bases, unsigned int numBases){
+  DNAWrapper *ret = (DNAWrapper*)malloc(sizeof(DNAWrapper));
+  ret->bases = bases;
+  ret->totalSize = numBases;
+  ret->structIndex = 0;
+  ret->baseOffset = 0;
+  ret->hasEnded = (numBases == 0);
+  return ret;
 }
 
 void transcript(BD bases, AQ *acids){
@@ -207,18 +247,36 @@ char* AAToString(AQ acids){
 
 
 void testN(){
-  BD test;
-  AQ test2;
-  test.size = 12;
-  test.options = 0;
-  test.bases = 0b011000110110101110010001;
-  printf("%s\n",baseToString(test));
-  transcript(test, &test2);
-  printf("%s\n",AAToString(test2));
-  setBase(&test, 2, A);
-  printf("%s\n",baseToString(test));
-  transcript(test, &test2);
-  printf("%s\n",AAToString(test2)); 
+  BD test1;
+  AQ testA;
+  test1.size = 12;
+  test1.options = 0;
+  test1.bases = 0b011000110110101110010001;
+  printf("%s\n",baseToString(test1));
+  transcript(test1, &testA);
+  printf("%s\n",AAToString(testA));
+  setBase(&test1, 2, A);
+  printf("%s\n",baseToString(test1));
+  transcript(test1, &testA);
+  printf("%s\n",AAToString(testA)); 
+  
+  BD test2 = test1;
+  BD test3;
+  
+  test3.size = 5;
+  test3.options = 0;
+  test3.bases = 0b0111111011;
+  
+  BD* array = malloc(sizeof(BD)*3);
+  array[0] = test1;
+  array[1] = test2;
+  array[2] = test3;
+  
+  DNAWrapper* wrapper = makeWrapper(array,29);
+  char c;
+  while( (c = nextBase(wrapper)) != -1){
+    printf("%d\n",c);
+  }
 }
 
 
