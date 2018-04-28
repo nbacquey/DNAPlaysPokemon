@@ -43,7 +43,7 @@ void testA(){
 
   char* DNA_sequence = "AAAAAAA\0";
   BD* genome_chunk;
-  genome_chunk = newBD(DNA_sequence);
+  genome_chunk = newBD(DNA_sequence, 4);
   printf("================ %s\n",baseToString(*genome_chunk));
 
   build_genome();

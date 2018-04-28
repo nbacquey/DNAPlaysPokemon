@@ -3,4 +3,4 @@
 
 // prototypes :
 int build_genome();
-BD* newBD(char* DNA_sequence);
+BD* newBD(char* DNA_sequence, int len);
