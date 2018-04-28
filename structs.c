@@ -5,6 +5,8 @@
 
 #include "structs.h"
 
+
+
 int getBase(BD dodecuplet, int i){
   if(i >= dodecuplet.size)
     return -1;

@@ -37,19 +37,21 @@
 #define AQ AAQuadruplet
 
 // basic structures for internal representation
-typedef struct baseDodecuplet {
+#ifndef STRUCT_DEF
+#define STRUCT_DEF
+typedef struct  {
   unsigned int size     :4;
   unsigned int bases    :24;
   unsigned int options  :4;
 } baseDodecuplet;
 
-typedef struct AAQuadruplet {
+typedef struct  {
   unsigned int size     :4;
   unsigned int acids    :20;
   unsigned int options  :8;
 } AAQuadruplet;
 
-typedef struct DNAWrapper {
+typedef struct  {
   BD *bases;
   unsigned int totalSize;
   unsigned int structIndex;
@@ -57,14 +59,14 @@ typedef struct DNAWrapper {
   unsigned char hasEnded;
 } DNAWrapper;
 
-typedef struct AAWrapper {
+typedef struct  {
   AQ *acids;
   unsigned int totalSize;
   unsigned int structIndex;
   unsigned int baseOffset;
   unsigned char hasEnded;
 } AAWrapper;
-
+#endif
 
 int getBase(BD dodecuplet, int i);
 

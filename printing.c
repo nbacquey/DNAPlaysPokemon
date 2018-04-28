@@ -90,7 +90,7 @@ char* getNAcids(AAWrapper* wrapper, int n){
     strncpy(ret+(4*i*sizeof(char)), acidStrings[acid], (size_t) 4);
     acid = nextAcid(wrapper);
   }
-  ret[4*i] = '\0';
+  ret[4*i-1] = '\0';
   
   wrapper->structIndex = oldIndex;
   wrapper->baseOffset = oldOffset;
