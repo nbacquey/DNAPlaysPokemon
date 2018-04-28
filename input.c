@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 
-#include "printing.h"
+#include "input.h"
 
 int build_genome(){
 
