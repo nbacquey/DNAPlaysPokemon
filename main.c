@@ -89,10 +89,7 @@ int build_genome(){
 
   while((c = getc(fasta_file)) != -1) {
     printf("read char: %c\n", c);
-    if (c == '\n') {
-      printf("this is a carriage return, thus I skip it \n");
-      continue;
-    }else if (c == '>') {
+    if (c == '>') {
       printf("this is a >, thus I skip : \n");
       // Skip until the next newline:
       do {
@@ -100,7 +97,9 @@ int build_genome(){
         printf("%c-", c);
       } while (c != -1 && c != '\n');
       continue;
-    }else {
+    }else if (c == 65 || c == 84 ||c == 67 || c == 71){
+      // base character A, T, C, or G
+
       if (num_base%12 == 0){
         printf("genome_chunk if full : %s. chunk num : %i\n", genome_chunk, num_base/12);
       }
@@ -109,6 +108,10 @@ int build_genome(){
       printf("%i mod %i = %d \n", num_base, 12, num_base % 12 );
       genome_chunk[num_base % 12]=c;
       num_base+=1; // this is a correct base
+
+    }else{
+      printf("%c is not a charactere for a base, thus I skip it \n", c);
+      continue;
     }
   }
 
