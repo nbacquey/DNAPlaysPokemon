@@ -52,6 +52,12 @@ int main (int argc, char **argv){
   int c; // getc will send a char as an int
   while((c = getc(fasta_file)) != -1) {
     printf("read char: %c\n", c);
+    if (c == '\n') {
+      printf("this is a carriage return, thus I skip it \n");
+      continue;
+    }else {
+      printf("to keep : %c\n", c);
+    }
   }
 
   fclose(fasta_file);
