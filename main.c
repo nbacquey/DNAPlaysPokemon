@@ -82,6 +82,11 @@ int build_genome(){
   }
 
   int c; // getc will send a char as an int
+  int num_base = 0; // number of DNA base that have been parsed
+
+  char genome_chunk[12 + 1] = "            \0"; // the chunk that will fill a BD struct
+  // +1 for the string end
+
   while((c = getc(fasta_file)) != -1) {
     printf("read char: %c\n", c);
     if (c == '\n') {
@@ -96,7 +101,14 @@ int build_genome(){
       } while (c != -1 && c != '\n');
       continue;
     }else {
+      if (num_base%12 == 0){
+        printf("genome_chunk if full : %s. chunk num : %i\n", genome_chunk, num_base/12);
+      }
+
       printf("to keep : %c\n", c);
+      printf("%i mod %i = %d \n", num_base, 12, num_base % 12 );
+      genome_chunk[num_base % 12]=c;
+      num_base+=1; // this is a correct base
     }
   }
 
