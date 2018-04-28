@@ -43,9 +43,9 @@ typedef struct baseDodecuplet {
 } baseDodecuplet;
 
 typedef struct AAQuadruplet {
-  unsigned int size     :2;
+  unsigned int size     :4;
   unsigned int acids    :20;
-  unsigned int options  :10;
+  unsigned int options  :8;
 } AAQuadruplet;
 
 char genCode[64] = {
@@ -83,8 +83,7 @@ int getAAcid(AQ quadruplet, int i){
 }
 
 void transcript(BD bases, AQ *acids){
-  acids->size = bases.size/3;
-  printf("tot %d\n",bases.size);
+  acids->size = (bases.size)/3;
   int i;
   unsigned int AAcids = 0;
   for(i = 0; i < acids->size; ++i){
@@ -128,7 +127,6 @@ char* AAToString(AQ acids){
   int i;
   for(i=0; i<acids.size; ++i){
     int pos = 4*i;
-    //printf("%d\n",getAAcid(acids,i));
     switch (getAAcid(acids,i)){
       case Ala:
         strncpy(ret+(pos*sizeof(char)), "Ala-",((size_t)4));
@@ -203,12 +201,28 @@ char* AAToString(AQ acids){
         break;
     }
   }
-  ret[4*i] = '\0';
+  ret[4*i-1] = '\0';
   return ret;
 }
 
 
+void testN(){
+  BD test;
+  AQ test2;
+  test.size = 12;
+  test.options = 0;
+  test.bases = 0b011000110110101110010001;
+  printf("%s\n",baseToString(test));
+  transcript(test, &test2);
+  printf("%s\n",AAToString(test2));
+  setBase(&test, 2, A);
+  printf("%s\n",baseToString(test));
+  transcript(test, &test2);
+  printf("%s\n",AAToString(test2)); 
+}
 
+
+  
 int build_genome(){
 
   FILE * fasta_file;
@@ -250,25 +264,11 @@ void testA(){
 }
 
 int main (int argc, char **argv){
-  BD test;
-  AQ test2;
-  test.size = 12;
-  test.options = 0;
-  test.bases = 0b011000110110;
-  printf("Enumération des bases %d %d %d %d %d %d\n",getBase(test,0),getBase(test,1),getBase(test,2),getBase(test,3),getBase(test,4),getBase(test,6));
 
 
   testA();
 
-
-  test.bases = 0b011000110110101110010001;
-  printf("%s\n",baseToString(test));
-  transcript(test, &test2);
-  printf("%s\n",AAToString(test2));
-  setBase(&test, 2, A);
-  printf("%s\n",baseToString(test));
-  transcript(test, &test2);
-  printf("%s\n",AAToString(test2));
+  testN();
   return 0;
   
 }
