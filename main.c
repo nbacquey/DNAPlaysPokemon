@@ -55,6 +55,14 @@ int main (int argc, char **argv){
     if (c == '\n') {
       printf("this is a carriage return, thus I skip it \n");
       continue;
+    }else if (c == '>') {
+      printf("this is a >, thus I skip : \n");
+      // Skip until the next newline:
+      do {
+        c = getc(fasta_file);
+        printf("%c-", c);
+      } while (c != -1 && c != '\n');
+      continue;
     }else {
       printf("to keep : %c\n", c);
     }
