@@ -10,6 +10,8 @@ char* baseToString(BD bases);
 char* AAToString(AQ acids);
 
 char* getNBases(DNAWrapper* wrapper, int n);
+char* getNBasesFrom(DNAWrapper* wrapper, int n, int start);
 
 char* getNAcids(AAWrapper* wrapper, int n);
+char* getNAcidsFrom(AAWrapper* wrapper, int n, int start);
 

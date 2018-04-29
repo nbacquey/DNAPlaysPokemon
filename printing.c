@@ -77,12 +77,73 @@ char* getNBases(DNAWrapper* wrapper, int n){
   return ret;
 }
 
+char* getNBasesFrom(DNAWrapper* wrapper, int n, int start){
+  
+  
+  char* ret = malloc(sizeof(char)*(n+1));
+  if(start >= wrapper->totalSize){
+    ret[0] = '\0';
+    return ret;
+  }
+  
+  unsigned int oldIndex = wrapper->structIndex;
+  unsigned int oldOffset = wrapper->baseOffset;
+  unsigned int oldEnded = wrapper->hasEnded;
+  
+  wrapper->structIndex = start/12;
+  wrapper->baseOffset = start%12;  
+  
+  int base = nextBase(wrapper);
+  int i;
+  for(i = 0; i < n && base != -1; ++i){
+    ret[i] = baseChars[base];
+    base = nextBase(wrapper);
+  }
+  ret[i] = '\0';
+  
+  wrapper->structIndex = oldIndex;
+  wrapper->baseOffset = oldOffset;
+  wrapper->hasEnded = oldEnded;
+
+  return ret;
+}
+
 char* getNAcids(AAWrapper* wrapper, int n){
   char* ret = malloc(sizeof(char)*(4*n));
   
   unsigned int oldIndex = wrapper->structIndex;
   unsigned int oldOffset = wrapper->baseOffset;
   unsigned int oldEnded = wrapper->hasEnded;
+  
+  int acid = nextAcid(wrapper);
+  int i;
+  for(i = 0; i < n && acid != -1; ++i){
+    strncpy(ret+(4*i*sizeof(char)), acidStrings[acid], (size_t) 4);
+    acid = nextAcid(wrapper);
+  }
+  ret[4*i-1] = '\0';
+  
+  wrapper->structIndex = oldIndex;
+  wrapper->baseOffset = oldOffset;
+  wrapper->hasEnded = oldEnded;
+  
+  return ret;
+}
+
+char* getNAcidsFrom(AAWrapper* wrapper, int n, int start){
+  char* ret = malloc(sizeof(char)*(4*n));
+  
+  if(start >= wrapper->totalSize){
+    ret[0] = '\0';
+    return ret;
+  }
+  
+  unsigned int oldIndex = wrapper->structIndex;
+  unsigned int oldOffset = wrapper->baseOffset;
+  unsigned int oldEnded = wrapper->hasEnded;
+  
+  wrapper->structIndex = start/4;
+  wrapper->baseOffset = start%4; 
   
   int acid = nextAcid(wrapper);
   int i;

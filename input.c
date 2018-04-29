@@ -98,10 +98,10 @@ void parse_fasta(struct genome* g, char * path){
 
 
 
-  //DNAWrapper* w = makeDNAWrapper(g->bds, g->num_base);
+  DNAWrapper* w = makeDNAWrapper(g->bds, g->num_base);
   //printf("ooooooo!!!!!!num_base = %d : \n%s\n", g->num_base, getNBases(w, g->num_base));
 
-  printf("\nParsed %d bases from file : %s\n", g-> num_base, path);
+  printf("\nParsed %d bases from file : %s\nSample: %s...%s\n", g-> num_base, path, getNBasesFrom(w,20,0), getNBasesFrom(w,20,(g->num_base)-20));
 
   fclose(fasta_file);
 
