@@ -9,6 +9,7 @@
 
 void parse_fasta(struct genome* g, char * path){
  
+  printf("Parsing started...\n");
 
   FILE * fasta_file;
   fasta_file = fopen(path, "r");
@@ -25,42 +26,47 @@ void parse_fasta(struct genome* g, char * path){
 
 
   while((c = getc(fasta_file)) != -1) {
-    printf("read char: %c\n", c);
+    //printf("read char: %c\n", c);
     if (c == '>') {
-      printf("this is a >, thus I skip : \n");
+      //printf("this is a >, thus I skip : \n");
       // Skip until the next newline:
       do {
         c = getc(fasta_file);
-        printf("%c-", c);
+        //printf("%c-", c);
       } while (c != -1 && c != '\n');
       continue;
-    }else if (c == 65 || c == 84 ||c == 67 || c == 71){
+    }else if (c == 'A' || c == 'T' ||c == 'C' || c == 'G'){
       // base character A, T, C, or G
 
       g->num_base+=1; // this is a correct base
+      
+      if(g->num_base % 10000000 == 0){
+        printf("\r%d Mbases parsed...",g->num_base/1000000);
+        fflush(stdout);
+      }
 
-      printf("to keep : %c, --- %d ---, its index = %d, its num_chunk = %d \n", c, g->num_base -1 , (g->num_base -1) % 12, num_chunk);
-      printf("%i mod %i = %d \n", g->num_base, 12, g->num_base % 12 );
+      //printf("to keep : %c, --- %d ---, its index = %d, its num_chunk = %d \n", c, g->num_base -1 , (g->num_base -1) % 12, num_chunk);
+      //printf("%i mod %i = %d \n", g->num_base, 12, g->num_base % 12 );
       DNAsequence_chunk[(g->num_base-1) % 12]=c;
       //                             A
       //                             |___ because indexing begin to 0
 
       if (g->num_base%12 == 0){
         num_chunk += 1;
-        printf("DNAsequence_chunk if full : %s. chunk num : %i\n", DNAsequence_chunk, num_chunk);
+        //printf("DNAsequence_chunk if full : %s. chunk num : %i\n", DNAsequence_chunk, num_chunk);
         BD* genome_chunk;
         genome_chunk = newBD(DNAsequence_chunk, 12);
-        printf("================ %s\n",baseToString(*genome_chunk));
+        //printf("================ %s\n",baseToString(*genome_chunk));
         g->bds = realloc(g->bds, num_chunk * sizeof(BD));
         g->bds[num_chunk-1] = *genome_chunk;
 
-        DNAWrapper* w = makeDNAWrapper(g->bds, g->num_base);
-        printf("????g->num_base = %d : \n%s\n", g->num_base, getNBases(w, g->num_base));
+        //DNAWrapper* w = makeDNAWrapper(g->bds, g->num_base);
+        //printf("????g->num_base = %d : \n%s\n", g->num_base, getNBases(w, g->num_base));
       }
 
 
     }else{
-      printf("%c is not a charactere for a base, thus I skip it \n", c);
+      //printf("%c is not a charactere for a base, thus I skip it \n", c);
       continue;
     }
   }
@@ -73,28 +79,28 @@ void parse_fasta(struct genome* g, char * path){
     num_chunk += 1 ; 
 
     DNAsequence_chunk[g->num_base % 12 ]='\0';
-    printf("AT THE END OF THE FILE :DNAsequence_chunk = %s, its len = %d, its num_chunk = %d\n", DNAsequence_chunk, g->num_base % 12, num_chunk );
+    //printf("AT THE END OF THE FILE :DNAsequence_chunk = %s, its len = %d, its num_chunk = %d\n", DNAsequence_chunk, g->num_base % 12, num_chunk );
       
-    DNAWrapper* w = makeDNAWrapper(g->bds, g->num_base);
-    printf("!!!!!!num_base = %d : \n%s\n", g->num_base, getNBases(w, g->num_base));
+    //DNAWrapper* w = makeDNAWrapper(g->bds, g->num_base);
+    //printf("!!!!!!num_base = %d : \n%s\n", g->num_base, getNBases(w, g->num_base));
 
     BD* genome_chunk;
     genome_chunk = newBD(DNAsequence_chunk, (g->num_base+1)%12);
-    printf("================ %s\n",baseToString(*genome_chunk));
-    printf("we realloc\n");
+    //printf("================ %s\n",baseToString(*genome_chunk));
+    //printf("we realloc\n");
     g->bds = realloc(g->bds, num_chunk  * sizeof(BD));
-    printf("we write it\n");
+    //printf("we write it\n");
     g->bds[num_chunk-1] = *genome_chunk;
-    printf("end write\n");
+    //printf("end write\n");
 
   }
 
 
 
-  DNAWrapper* w = makeDNAWrapper(g->bds, g->num_base);
-  printf("ooooooo!!!!!!num_base = %d : \n%s\n", g->num_base, getNBases(w, g->num_base));
+  //DNAWrapper* w = makeDNAWrapper(g->bds, g->num_base);
+  //printf("ooooooo!!!!!!num_base = %d : \n%s\n", g->num_base, getNBases(w, g->num_base));
 
-
+  printf("\nParsed %d bases from file : %s\n", g-> num_base, path);
 
   fclose(fasta_file);
 
@@ -137,8 +143,8 @@ struct genome build_genome(){
       filepath[strlen(filepath)-3]=0 ; // - 3 = .gz  `\0
       printf("filepath = %s \n", filepath);
       parse_fasta(&g, filepath);
-      DNAWrapper* w = makeDNAWrapper(g.bds, g.num_base);
-      printf("______num_base = %d : \n%s\n", g.num_base, getNBases(w, g.num_base));
+      //DNAWrapper* w = makeDNAWrapper(g.bds, g.num_base);
+      //printf("______num_base = %d : \n%s\n", g.num_base, getNBases(w, g.num_base));
 
 
     }
@@ -159,17 +165,17 @@ BD* newBD(char* DNA_sequence, int len){
   genome_chunk->size = len + 1;
   genome_chunk->options = 0;
 
-  printf("in newBD : string %s and its len is %d \n", DNA_sequence, len);
+  //printf("in newBD : string %s and its len is %d \n", DNA_sequence, len);
 
   for (int i = 0; i < len; ++i){
-    printf("%d, ", i);
-    if (DNA_sequence[i] == 65){
+    //printf("%d, ", i);
+    if (DNA_sequence[i] == 'A'){
       setBase(genome_chunk, i, A);
-    }else if(DNA_sequence[i] == 84){
+    }else if(DNA_sequence[i] == 'T'){
       setBase(genome_chunk, i, T);
-    }else if(DNA_sequence[i] == 67){
+    }else if(DNA_sequence[i] == 'C'){
       setBase(genome_chunk, i, C);
-    }else if(DNA_sequence[i] == 71){
+    }else if(DNA_sequence[i] == 'G'){
       setBase(genome_chunk, i, G);
     }
   }
