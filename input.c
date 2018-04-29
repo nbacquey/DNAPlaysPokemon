@@ -107,6 +107,37 @@ struct genome build_genome(){
   g.bds = NULL ;
   g.num_base = 0 ; 
 
+  char* dirpath = "data/fasta"; 
+  DIR *d = opendir(dirpath);
+  if (d==NULL){ // couldn't open directory
+    perror("opening dir");
+  return g;
+  }
+
+
+  struct dirent *dir;
+  while ((dir = readdir(d)) != NULL) { // readdir send NULL if no more file to read
+    printf("%s\n", dir->d_name);
+    if ( fnmatch( "Homo_sapiens.GRCh38.dna.chromosome.*.fa" , dir->d_name , 0) == 0 ){
+      printf("XXXX : %s\n", dir->d_name);
+
+
+      char filepath[strlen(dirpath) + strlen(dir->d_name) +1 ] ; 
+      int size_filepath = sprintf(filepath, "%s/%s",dirpath,dir->d_name);
+      printf("%s\n", filepath);
+      printf("filepath = %s \n", filepath);
+      parse_fasta(&g, filepath);
+      DNAWrapper* w = makeDNAWrapper(g.bds, g.num_base);
+      printf("______num_base = %d : \n%s\n", g.num_base, getNBases(w, g.num_base));
+
+
+    }
+  }
+  closedir(d);
+
+
+  printf("////////////////////////////\n");
+
   return g;
 
 }

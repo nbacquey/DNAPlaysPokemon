@@ -46,31 +46,12 @@ void testA(){
   genome_chunk = newBD(DNA_sequence, 4);
   printf("================ %s\n",baseToString(*genome_chunk));
 
-  //build_genome();
-
-  printf("\n\n\n\n\n\n\n\nççççççççççççççççççççççççç\n");
-
-  DNAWrapper* w ;
-
-  struct genome g ; 
-  g.num_base=0; 
-  g.bds = NULL ; 
-
-  parse_fasta(&g, "data/fasta/Homo_sapiens.GRCh38.dna.chromosome.15.fa");
-  w = makeDNAWrapper(g.bds, g.num_base);
-  printf("______num_base = %d : \n%s\n", g.num_base, getNBases(w, g.num_base));
-
-
-
-  parse_fasta(&g, "data/fasta/Homo_sapiens.GRCh38.dna.chromosome.16.fa");
-  w = makeDNAWrapper(g.bds, g.num_base);
+  struct genome g = build_genome();
+  DNAWrapper* w = makeDNAWrapper(g.bds, g.num_base);
   printf("______num_base = %d : \n%s\n", g.num_base, getNBases(w, g.num_base));
 
 
   printf("\n\n\n\n\n\n\n\nççççççççççççççççççççççççç\n");
-
-
-
 
 }
 
