@@ -5,23 +5,23 @@
 
 #include "input.h"
 
-int build_genome(){
+
+
+void parse_fasta(struct genome* g, char * path){
+ 
 
   FILE * fasta_file;
-  fasta_file = fopen("data/line-per-line.txt", "r");
+  fasta_file = fopen(path, "r");
   if (NULL == fasta_file){
     perror("opening file");
-    return (-1);
   }
 
   int c; // getc will send a char as an int
-  int num_base = 0; // number of DNA base that have been parsed
+  int num_chunk = g->num_base / 12; 
 
   char DNAsequence_chunk[12 + 1] = "            \0"; // the chunk that will fill a BD struct
   // +1 for the string end
-
-  BD * genome ;
-  genome = malloc(0 * sizeof(BD));
+  // TODO : use last genome.bds.sequence
 
 
   while((c = getc(fasta_file)) != -1) {
@@ -37,25 +37,25 @@ int build_genome(){
     }else if (c == 65 || c == 84 ||c == 67 || c == 71){
       // base character A, T, C, or G
 
-      num_base+=1; // this is a correct base
+      g->num_base+=1; // this is a correct base
 
-      printf("to keep : %c, --- %d ---, its index = %d \n", c, num_base -1 , (num_base -1) % 12);
-      printf("%i mod %i = %d \n", num_base, 12, num_base % 12 );
-      DNAsequence_chunk[(num_base-1) % 12]=c;
-      //                          A
-      //                          |___ because indexing begin to 0
+      printf("to keep : %c, --- %d ---, its index = %d, its num_chunk = %d \n", c, g->num_base -1 , (g->num_base -1) % 12, num_chunk);
+      printf("%i mod %i = %d \n", g->num_base, 12, g->num_base % 12 );
+      DNAsequence_chunk[(g->num_base-1) % 12]=c;
+      //                             A
+      //                             |___ because indexing begin to 0
 
-      if (num_base%12 == 0){
-        int num_chunk = num_base/12;
+      if (g->num_base%12 == 0){
+        num_chunk += 1;
         printf("DNAsequence_chunk if full : %s. chunk num : %i\n", DNAsequence_chunk, num_chunk);
         BD* genome_chunk;
         genome_chunk = newBD(DNAsequence_chunk, 12);
         printf("================ %s\n",baseToString(*genome_chunk));
-        genome = realloc(genome, num_chunk * sizeof(BD));
-        genome[num_chunk-1] = *genome_chunk;
+        g->bds = realloc(g->bds, num_chunk * sizeof(BD));
+        g->bds[num_chunk-1] = *genome_chunk;
 
-        DNAWrapper* w = makeDNAWrapper(genome, num_base);
-        printf("????num_base = %d : \n%s\n", num_base, getNBases(w, num_base));
+        DNAWrapper* w = makeDNAWrapper(g->bds, g->num_base);
+        printf("????g->num_base = %d : \n%s\n", g->num_base, getNBases(w, g->num_base));
       }
 
 
@@ -67,33 +67,47 @@ int build_genome(){
 
   // End of the file
 
+
   // possibly some base left :
-  if (num_base%12 != 0){
+  if (g->num_base%12 != 0){
+    num_chunk += 1 ; 
 
-
-    DNAsequence_chunk[num_base % 12 ]='\0';
-    printf("AT THE END OF THE FILE : DNAsequence_chunk = %s, its len = %d\n", DNAsequence_chunk, num_base % 12 );
-    
-    int num_chunk = num_base/12;
-    printf("%i mod %i = %d \n", num_base, 12, num_base % 12 );
+    DNAsequence_chunk[g->num_base % 12 ]='\0';
+    printf("AT THE END OF THE FILE :DNAsequence_chunk = %s, its len = %d, its num_chunk = %d\n", DNAsequence_chunk, g->num_base % 12, num_chunk );
+      
+    DNAWrapper* w = makeDNAWrapper(g->bds, g->num_base);
+    printf("!!!!!!num_base = %d : \n%s\n", g->num_base, getNBases(w, g->num_base));
 
     BD* genome_chunk;
-    genome_chunk = newBD(DNAsequence_chunk, num_base%12);
+    genome_chunk = newBD(DNAsequence_chunk, (g->num_base+1)%12);
     printf("================ %s\n",baseToString(*genome_chunk));
-    genome = realloc(genome, num_chunk * sizeof(BD));
-    genome[num_chunk] = *genome_chunk;
+    printf("we realloc\n");
+    g->bds = realloc(g->bds, num_chunk  * sizeof(BD));
+    printf("we write it\n");
+    g->bds[num_chunk-1] = *genome_chunk;
+    printf("end write\n");
 
   }
 
-  DNAWrapper* w = makeDNAWrapper(genome, num_base);
-  printf("!!!!!!num_base = %d : \n%s\n", num_base, getNBases(w, num_base));
+
+
+  DNAWrapper* w = makeDNAWrapper(g->bds, g->num_base);
+  printf("ooooooo!!!!!!num_base = %d : \n%s\n", g->num_base, getNBases(w, g->num_base));
 
 
 
   fclose(fasta_file);
-  free(genome);
 
-  return 0;
+
+}
+
+struct genome build_genome(){
+
+  struct genome g ; 
+  g.bds = NULL ;
+  g.num_base = 0 ; 
+
+  return g;
 
 }
 
@@ -101,7 +115,7 @@ int build_genome(){
 BD* newBD(char* DNA_sequence, int len){
   BD* genome_chunk = malloc (sizeof (BD));
 
-  genome_chunk->size = len;
+  genome_chunk->size = len + 1;
   genome_chunk->options = 0;
 
   printf("in newBD : string %s and its len is %d \n", DNA_sequence, len);
