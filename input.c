@@ -118,13 +118,23 @@ struct genome build_genome(){
   struct dirent *dir;
   while ((dir = readdir(d)) != NULL) { // readdir send NULL if no more file to read
     printf("%s\n", dir->d_name);
-    if ( fnmatch( "Homo_sapiens.GRCh38.dna.chromosome.*.fa" , dir->d_name , 0) == 0 ){
+    if ( fnmatch( "Homo_sapiens.GRCh38.dna.chromosome.*.fa.gz" , dir->d_name , 0) == 0 ){
       printf("XXXX : %s\n", dir->d_name);
 
 
       char filepath[strlen(dirpath) + strlen(dir->d_name) +1 ] ; 
       int size_filepath = sprintf(filepath, "%s/%s",dirpath,dir->d_name);
       printf("%s\n", filepath);
+
+
+      char cmd[10 + 1 + size_filepath + 1]  ;  // "gunzip" + ' ' + gzfilepath + '\0'
+      strcpy( cmd, "gunzip -k " );
+      strcat( cmd, filepath);
+      printf("%s\n", cmd);
+      int status = system( cmd );
+
+
+      filepath[strlen(filepath)-3]=0 ; // - 3 = .gz  `\0
       printf("filepath = %s \n", filepath);
       parse_fasta(&g, filepath);
       DNAWrapper* w = makeDNAWrapper(g.bds, g.num_base);
