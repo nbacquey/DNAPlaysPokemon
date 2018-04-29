@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "input.h"
+#include "printing.h"
 #include "structs.h"
 #include "transcript.h"
 

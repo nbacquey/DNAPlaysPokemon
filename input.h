@@ -1,7 +1,7 @@
 #include <dirent.h> 
 #include <fnmatch.h>
 
-#include "printing.h"
+#include "structs.h"
 
 
 
