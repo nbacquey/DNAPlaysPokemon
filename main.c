@@ -47,23 +47,17 @@ void testN(){
 
 void testA(){
 
-  char* DNA_sequence = "AAAAAAA\0";
-  BD* genome_chunk;
-  genome_chunk = newBD(DNA_sequence, 4);
-  printf("================ %s\n",baseToString(*genome_chunk));
 
   struct genome * g = build_genome();
-
-  printf("\n\n\n\n\n\n\n\nççççççççççççççççççççççççç\n");
 
 }
 
 int main (int argc, char **argv){
 
 
-  //testA();
+  testA();
 
-  testN();
+  //testN();
   return 0;
   
 }

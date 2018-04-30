@@ -10,7 +10,7 @@
 
 DNAWrapper* parse_fasta(char * path){
  
-  printf("Parsing started...\n");
+  printf("Parsing started from %s...\n",path);
 
   FILE * fasta_file;
   fasta_file = fopen(path, "r");
@@ -144,19 +144,19 @@ struct genome * build_genome(){
   unsigned int num_wrappers = 0 ; // number of file that havve been parsed
 
   while ((dir = readdir(d)) != NULL) { // readdir send NULL if no more file to read
-    printf("%s\n", dir->d_name);
+    //printf("%s\n", dir->d_name);
     if ( fnmatch( "Homo_sapiens.GRCh38.dna.chromosome.*.fa" , dir->d_name , 0) == 0 ){
-      printf("XXXX : %s\n", dir->d_name);
+      //printf("XXXX : %s\n", dir->d_name);
 
       num_wrappers += 1 ;
 
       char filepath[strlen(dirpath) + strlen(dir->d_name) +1 ] ; 
       sprintf(filepath, "%s/%s",dirpath,dir->d_name);
-      printf("filepath = %s \n", filepath);
+      //printf("filepath = %s \n", filepath);
 
       DNAWrapper* current_wrapper = parse_fasta(filepath);
       current_wrapper->filePath = filepath;
-      printf("&&&&&&&&&&&&&&&\nnum_wrapper = %d, num_base = %d : \n%s\n", num_wrappers, current_wrapper->totalSize, getNBases(current_wrapper, current_wrapper->totalSize));
+      //printf("&&&&&&&&&&&&&&&\nnum_wrapper = %d, num_base = %d : \n%s\n", num_wrappers, current_wrapper->totalSize, getNBases(current_wrapper, current_wrapper->totalSize));
 
       ws = realloc(ws, num_wrappers * sizeof(DNAWrapper*));
       ws[num_wrappers-1] = current_wrapper;
@@ -166,7 +166,7 @@ struct genome * build_genome(){
   closedir(d);
 
 
-  printf("////////////////////////////\n");
+  printf("\n====All files parsed====\n");
  
   g->wrappers = ws ;
   g->num_wrappers = num_wrappers ; 
