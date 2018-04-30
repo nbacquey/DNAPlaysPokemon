@@ -7,6 +7,7 @@
 #include "printing.h"
 #include "structs.h"
 #include "transcript.h"
+#include "frequency.h"
 
 void testN(){
   BD test1;
@@ -38,6 +39,10 @@ void testN(){
   AAWrapper* wrapperA = transcriptWrapper(wrapper1);
   printf("%s\n",getNBases(wrapper1,34));
   printf("%s\n",getNAcids(wrapperA,34));
+  
+  occurencyMapper *mapper = countNGrams(wrapper1, 3);
+  
+  printOccurencies(mapper);
 }
 
 void testA(){
@@ -56,7 +61,7 @@ void testA(){
 int main (int argc, char **argv){
 
 
-  testA();
+  //testA();
 
   testN();
   return 0;

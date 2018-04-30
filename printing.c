@@ -160,3 +160,29 @@ char* getNAcidsFrom(AAWrapper* wrapper, int n, int start){
   return ret;
 }
 
+char* makeNGram(unsigned long long ngram, int n){
+  char *ret = malloc(sizeof(char)*(n+1));
+  int i;
+  for(i = n-1; i >= 0; --i){
+    ret[i] = baseChars[ngram & 0b11];
+    ngram >>= 2;
+  }
+  
+  ret[n]  ='\0';
+  return ret;
+}
+
+void printOccurencies(occurencyMapper *mapper){
+  printf("Printing occurency map:\n");
+  int i;
+  
+  for(i = 0; i < mapper-> maximumNGram; ++i){
+    printf("\tOccurencies of %d-grams:\n",i);
+    unsigned long long j;
+    for(j = 0; j < (1<<(2*i+2)); ++j){
+      printf("\t\t%s -> %d\n",makeNGram(j,i+1), mapper->occurencies[i][j]);
+    }
+  }
+}
+
+
