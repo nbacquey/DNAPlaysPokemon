@@ -10,11 +10,13 @@
 #define FREQUENCY_DEF
 
 typedef struct occurencyMapper {
+  char *fileName;
   unsigned int maximumNGram;
-  unsigned int **occurencies;
+  unsigned long long **occurencies;
 } occurencyMapper;
 
 #endif
 
+occurencyMapper** mapGenome(genome* gen, unsigned int maximumNGram);
 occurencyMapper* countNGrams(DNAWrapper* wrapper, unsigned int maximumNGram);
 

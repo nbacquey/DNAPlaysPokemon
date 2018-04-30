@@ -49,13 +49,18 @@ void testA(){
 
 
   genome * g = build_genome();
+  occurencyMapper** mappers = mapGenome(g, 3);
+  int i;
+  for(i = 0; i < g->num_wrappers; ++i){
+    printOccurencies(mappers[i]);
+  }
 
 }
 
 int main (int argc, char **argv){
 
 
-  testA();
+  //testA();
 
   //testN();
   return 0;

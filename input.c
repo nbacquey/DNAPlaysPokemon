@@ -10,7 +10,7 @@
 
 DNAWrapper* parse_fasta(char * path){
  
-  printf("Parsing started from %s...\n",path);
+  printf("\nParsing started from %s...\n",path);
 
   FILE * fasta_file;
   fasta_file = fopen(path, "r");
@@ -115,7 +115,7 @@ DNAWrapper* parse_fasta(char * path){
   DNAWrapper* w = makeDNAWrapper(bds, num_base);
   //printf("ooooooo!!!!!!num_base = %d : \n%s\n", num_base, getNBases(w, num_base));
 
-  printf("\nParsed %d bases from file : %s\nSample: %s...%s\n", num_base, path, getNBasesFrom(w,20,0), getNBasesFrom(w,20,(num_base)-20));
+  printf("\nParsed %d bases from file : %s\nSample: %s...%s\n\n", num_base, path, getNBasesFrom(w,20,0), getNBasesFrom(w,20,(num_base)-20));
 
   fclose(fasta_file);
 
@@ -155,7 +155,9 @@ genome * build_genome(){
       //printf("filepath = %s \n", filepath);
 
       DNAWrapper* current_wrapper = parse_fasta(filepath);
-      current_wrapper->filePath = filepath;
+      char* filename = malloc(sizeof(char)*256);
+      current_wrapper->filePath = strncpy(filename, dir->d_name, 256);
+      filename[255] = '\0';
       //printf("&&&&&&&&&&&&&&&\nnum_wrapper = %d, num_base = %d : \n%s\n", num_wrappers, current_wrapper->totalSize, getNBases(current_wrapper, current_wrapper->totalSize));
 
       ws = realloc(ws, num_wrappers * sizeof(DNAWrapper*));

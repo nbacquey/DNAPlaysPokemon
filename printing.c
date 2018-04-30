@@ -173,14 +173,14 @@ char* makeNGram(unsigned long long ngram, int n){
 }
 
 void printOccurencies(occurencyMapper *mapper){
-  printf("Printing occurency map:\n");
+  printf("Printing occurency map of file %s:\n",mapper->fileName);
   int i;
   
   for(i = 0; i < mapper-> maximumNGram; ++i){
     printf("\tOccurencies of %d-grams:\n",i);
     unsigned long long j;
     for(j = 0; j < (1<<(2*i+2)); ++j){
-      printf("\t\t%s -> %d\n",makeNGram(j,i+1), mapper->occurencies[i][j]);
+      printf("\t\t%s -> %llu\n",makeNGram(j,i+1), mapper->occurencies[i][j]);
     }
   }
 }

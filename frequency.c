@@ -7,10 +7,21 @@
 #include "structs.h"
 #include "frequency.h"
 
-occurencyMapper** mapGenome(genome* test);
+occurencyMapper** mapGenome(genome* gen, unsigned int maximumNGram){
+  int n = gen-> num_wrappers;
+  occurencyMapper **ret = malloc(sizeof(occurencyMapper*)*n);
+  
+  int i;
+  for(i = 0; i < n; ++i){
+    ret[i] = countNGrams(gen->wrappers[i], maximumNGram);
+  }
+  
+  return ret;
+}
 
 occurencyMapper* countNGrams(DNAWrapper* wrapper, unsigned int maximumNGram){
   occurencyMapper* ret = malloc(sizeof(occurencyMapper));
+  ret-> fileName = wrapper->filePath;
   ret-> maximumNGram = maximumNGram;
   ret-> occurencies = malloc(sizeof(unsigned int*)*maximumNGram);
   
@@ -18,7 +29,7 @@ occurencyMapper* countNGrams(DNAWrapper* wrapper, unsigned int maximumNGram){
   
   int i;
   for(i = 0; i < maximumNGram; ++i){
-    ret->occurencies[i] = malloc(sizeof(unsigned int)*(1 << (2*i+2)));
+    ret->occurencies[i] = calloc(1 << (2*i+2),sizeof(unsigned long long));
     masks[i] = ~(ULLONG_MAX << (2*i+2));
   }
     
