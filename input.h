@@ -16,4 +16,4 @@ struct genome
 // prototypes :
 DNAWrapper* parse_fasta(char * path);
 struct genome * build_genome();
-BD* newBD(char* DNA_sequence, int len);
+BD* newBD(char* DNA_sequence, unsigned int len);
