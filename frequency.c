@@ -44,7 +44,7 @@ occurencyMapper* countNGrams(DNAWrapper* wrapper, unsigned int maximumNGram){
   for(i = 0; i < maximumNGram; ++i){
     buffer = (buffer << 2) + nextBase(wrapper);
     int j;
-    for(j = 0; j < i; ++j){
+    for(j = 0; j <= i; ++j){
       unsigned long long nGram = buffer & masks[j];
       ++(ret->occurencies[j][nGram]);
     }

@@ -37,10 +37,10 @@ void testN(){
   
   DNAWrapper* wrapper1 = makeDNAWrapper(array,29);
   AAWrapper* wrapperA = transcriptWrapper(wrapper1);
-  printf("%s\n",getNBases(wrapper1,34));
+  printf("%s\n",getNBases(wrapper1,40));
   printf("%s\n",getNAcids(wrapperA,34));
   
-  occurencyMapper *mapper = countNGrams(wrapper1, 3);
+  occurencyMapper *mapper = countNGrams(wrapper1, 4);
   
   printOccurencies(mapper);
 }
@@ -49,7 +49,7 @@ void testA(){
 
 
   genome * g = build_genome();
-  occurencyMapper** mappers = mapGenome(g, 3);
+  occurencyMapper** mappers = mapGenome(g, 6);
   int i;
   for(i = 0; i < g->num_wrappers; ++i){
     printOccurencies(mappers[i]);
@@ -60,7 +60,7 @@ void testA(){
 int main (int argc, char **argv){
 
 
-  //testA();
+  testA();
 
   //testN();
   return 0;
