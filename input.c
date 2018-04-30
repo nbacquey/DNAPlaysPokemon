@@ -8,7 +8,7 @@
 
 
 
-void parse_fasta(struct genome* g, char * path){
+DNAWrapper* parse_fasta(char * path){
  
   printf("Parsing started...\n");
 
@@ -19,11 +19,12 @@ void parse_fasta(struct genome* g, char * path){
   }
 
   int c; // getc will send a char as an int
-  int num_chunk = g->num_base / 12; 
+  int num_base = 0 ; // number of base that have been read.
+  int num_chunk = 0; 
+  BD* bds ;
 
   char DNAsequence_chunk[12 + 1] = "            \0"; // the chunk that will fill a BD struct
   // +1 for the string end
-  // TODO : use last genome.bds.sequence
 
 
   while((c = getc(fasta_file)) != -1) {
@@ -39,30 +40,30 @@ void parse_fasta(struct genome* g, char * path){
     }else if (c == 'A' || c == 'T' ||c == 'C' || c == 'G'){
       // base character A, T, C, or G
 
-      g->num_base+=1; // this is a correct base
+      num_base+=1; // this is a correct base
       
-      if(g->num_base % 10000000 == 0){
-        printf("\r%d Mbases parsed...",g->num_base/1000000);
+      if(num_base % 10000000 == 0){
+        printf("\r%d Mbases parsed...", num_base/1000000);
         fflush(stdout);
       }
 
-      //printf("to keep : %c, --- %d ---, its index = %d, its num_chunk = %d \n", c, g->num_base -1 , (g->num_base -1) % 12, num_chunk);
-      //printf("%i mod %i = %d \n", g->num_base, 12, g->num_base % 12 );
-      DNAsequence_chunk[(g->num_base-1) % 12]=c;
-      //                             A
-      //                             |___ because indexing begin to 0
+      //printf("to keep : %c, --- %d ---, its index = %d, its num_chunk = %d \n", c, num_base -1 , (num_base -1) % 12, num_chunk);
+      //printf("%i mod %i = %d \n", num_base, 12, num_base % 12 );
+      DNAsequence_chunk[(num_base-1) % 12]=c;
+      //                          A
+      //                          |___ because indexing begin to 0
 
-      if (g->num_base%12 == 0){
+      if (num_base%12 == 0){
         num_chunk += 1;
         //printf("DNAsequence_chunk if full : %s. chunk num : %i\n", DNAsequence_chunk, num_chunk);
         BD* genome_chunk;
         genome_chunk = newBD(DNAsequence_chunk, 12);
         //printf("================ %s\n",baseToString(*genome_chunk));
-        g->bds = realloc(g->bds, num_chunk * sizeof(BD));
-        g->bds[num_chunk-1] = *genome_chunk;
+        bds = realloc(bds, num_chunk * sizeof(BD));
+        bds[num_chunk-1] = *genome_chunk;
 
-        //DNAWrapper* w = makeDNAWrapper(g->bds, g->num_base);
-        //printf("????g->num_base = %d : \n%s\n", g->num_base, getNBases(w, g->num_base));
+        //DNAWrapper* w = makeDNAWrapper(bds, num_base);
+        //printf("????num_base = %d : \n%s\n", num_base, getNBases(w, num_base));
       }
 
 
@@ -76,58 +77,65 @@ void parse_fasta(struct genome* g, char * path){
 
 
   // possibly some base left :
-  if (g->num_base%12 != 0){
+  if (num_base%12 != 0){
     num_chunk += 1 ; 
 
-    DNAsequence_chunk[g->num_base % 12 ]='\0';
-    //printf("AT THE END OF THE FILE :DNAsequence_chunk = %s, its len = %d, its num_chunk = %d\n", DNAsequence_chunk, g->num_base % 12, num_chunk );
+    DNAsequence_chunk[num_base % 12 ]='\0';
+    //printf("AT THE END OF THE FILE :DNAsequence_chunk = %s, its len = %d, its num_chunk = %d\n", DNAsequence_chunk, num_base % 12, num_chunk );
       
-    //DNAWrapper* w = makeDNAWrapper(g->bds, g->num_base);
-    //printf("!!!!!!num_base = %d : \n%s\n", g->num_base, getNBases(w, g->num_base));
+    //DNAWrapper* w = makeDNAWrapper(bds, num_base);
+    //printf("!!!!!!num_base = %d : \n%s\n", num_base, getNBases(w, num_base));
 
     BD* genome_chunk;
-    genome_chunk = newBD(DNAsequence_chunk, (g->num_base+1)%12);
+    genome_chunk = newBD(DNAsequence_chunk, (num_base+1)%12);
     //printf("================ %s\n",baseToString(*genome_chunk));
     //printf("we realloc\n");
-    g->bds = realloc(g->bds, num_chunk  * sizeof(BD));
+    bds = realloc(bds, num_chunk  * sizeof(BD));
     //printf("we write it\n");
-    g->bds[num_chunk-1] = *genome_chunk;
+    bds[num_chunk-1] = *genome_chunk;
     //printf("end write\n");
 
   }
 
 
 
-  DNAWrapper* w = makeDNAWrapper(g->bds, g->num_base);
-  //printf("ooooooo!!!!!!num_base = %d : \n%s\n", g->num_base, getNBases(w, g->num_base));
+  DNAWrapper* w = makeDNAWrapper(bds, num_base);
+  //printf("ooooooo!!!!!!num_base = %d : \n%s\n", num_base, getNBases(w, num_base));
 
-  printf("\nParsed %d bases from file : %s\nSample: %s...%s\n", g-> num_base, path, getNBasesFrom(w,20,0), getNBasesFrom(w,20,(g->num_base)-20));
+  printf("\nParsed %d bases from file : %s\nSample: %s...%s\n", num_base, path, getNBasesFrom(w,20,0), getNBasesFrom(w,20,(num_base)-20));
 
   fclose(fasta_file);
+
+  return w;
 
 
 }
 
-struct genome build_genome(){
+struct genome * build_genome(){
 
-  struct genome g ; 
-  g.bds = NULL ;
-  g.num_base = 0 ; 
+  struct genome * g; 
+  g = malloc(sizeof(struct genome));
 
   char* dirpath = "data/fasta"; 
   DIR *d = opendir(dirpath);
   if (d==NULL){ // couldn't open directory
     perror("opening dir");
-  return g;
+    return g;
   }
 
 
   struct dirent *dir;
+
+
+  DNAWrapper** ws = malloc(0 * sizeof(DNAWrapper*)); // point to list of wrapper (one per fasta file)
+  int num_wrappers = 0 ; // number of file that havve been parsed
+
   while ((dir = readdir(d)) != NULL) { // readdir send NULL if no more file to read
     printf("%s\n", dir->d_name);
     if ( fnmatch( "Homo_sapiens.GRCh38.dna.chromosome.*.fa.gz" , dir->d_name , 0) == 0 ){
       printf("XXXX : %s\n", dir->d_name);
 
+      num_wrappers += 1 ;
 
       char filepath[strlen(dirpath) + strlen(dir->d_name) +1 ] ; 
       int size_filepath = sprintf(filepath, "%s/%s",dirpath,dir->d_name);
@@ -143,10 +151,12 @@ struct genome build_genome(){
 
       filepath[strlen(filepath)-3]=0 ; // - 3 = .gz  `\0
       printf("filepath = %s \n", filepath);
-      parse_fasta(&g, filepath);
-      //DNAWrapper* w = makeDNAWrapper(g.bds, g.num_base);
-      //printf("______num_base = %d : \n%s\n", g.num_base, getNBases(w, g.num_base));
 
+      DNAWrapper* current_wrapper = parse_fasta(filepath);
+      printf("&&&&&&&&&&&&&&&\nnum_wrapper = %d, num_base = %d : \n%s\n", num_wrappers, current_wrapper->totalSize, getNBases(current_wrapper, current_wrapper->totalSize));
+
+      ws = realloc(ws, num_wrappers * sizeof(DNAWrapper*));
+      ws[num_wrappers-1] = current_wrapper;
 
     }
   }
@@ -154,6 +164,9 @@ struct genome build_genome(){
 
 
   printf("////////////////////////////\n");
+ 
+  g->wrappers = ws ;
+  g->num_wrappers = num_wrappers ; 
 
   return g;
 
