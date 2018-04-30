@@ -48,7 +48,7 @@ void testN(){
 void testA(){
 
 
-  struct genome * g = build_genome();
+  genome * g = build_genome();
 
 }
 

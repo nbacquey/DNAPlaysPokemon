@@ -67,6 +67,12 @@ typedef struct  {
   unsigned int baseOffset;
   unsigned char hasEnded;
 } AAWrapper;
+
+typedef struct {
+  DNAWrapper** wrappers;
+  int num_wrappers; // number of fasta file that have been parsed
+} genome;
+
 #endif
 
 int getBase(BD dodecuplet, int i);

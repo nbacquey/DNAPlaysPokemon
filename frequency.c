@@ -7,6 +7,8 @@
 #include "structs.h"
 #include "frequency.h"
 
+occurencyMapper** mapGenome(genome* test);
+
 occurencyMapper* countNGrams(DNAWrapper* wrapper, unsigned int maximumNGram){
   occurencyMapper* ret = malloc(sizeof(occurencyMapper));
   ret-> maximumNGram = maximumNGram;

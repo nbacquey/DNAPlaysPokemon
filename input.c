@@ -124,10 +124,10 @@ DNAWrapper* parse_fasta(char * path){
 
 }
 
-struct genome * build_genome(){
+genome * build_genome(){
 
-  struct genome * g; 
-  g = malloc(sizeof(struct genome));
+  genome * g; 
+  g = malloc(sizeof(genome));
 
   char* dirpath = "data/fasta"; 
   DIR *d = opendir(dirpath);
