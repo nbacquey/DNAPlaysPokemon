@@ -21,11 +21,12 @@ DNAWrapper* parse_fasta(char * path){
   int c; // getc will send a char as an int
   unsigned int num_base = 0 ; // number of base that have been read.
   unsigned int num_chunk = 0; 
-  BD* bds = malloc(0 * sizeof(BD));
+
+  unsigned int allocated = 1024; // must be divisabe by 2
+  BD* bds = malloc(allocated * sizeof(BD));
 
   char DNAsequence_chunk[12 + 1] = "            \0"; // the chunk that will fill a BD struct
   // +1 for the string end
-
 
   while((c = getc(fasta_file)) != -1) {
     //printf("read char: %c\n", c);
@@ -59,11 +60,18 @@ DNAWrapper* parse_fasta(char * path){
         BD* genome_chunk;
         genome_chunk = newBD(DNAsequence_chunk, 12);
         //printf("================ %s\n",baseToString(*genome_chunk));
-        bds = realloc(bds, num_chunk * sizeof(BD));
         bds[num_chunk-1] = *genome_chunk;
 
         //DNAWrapper* w = makeDNAWrapper(bds, num_base);
         //printf("????num_base = %d : \n%s\n", num_base, getNBases(w, num_base));
+
+
+        if (num_chunk == allocated){
+          allocated = 3 * allocated / 2; // think that it must be integer all along
+          bds = realloc(bds, allocated * sizeof(BD));
+          // allocated + 1/2 * allocated 
+          // = 3 / 2 allocated
+        }
       }
 
 
