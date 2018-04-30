@@ -105,6 +105,11 @@ DNAWrapper* parse_fasta(char * path){
 
   }
 
+  // possibly too much allocated space :
+  if (num_chunk != allocated){
+    bds = realloc(bds, num_chunk * sizeof(BD));
+  }
+
 
 
   DNAWrapper* w = makeDNAWrapper(bds, num_base);
