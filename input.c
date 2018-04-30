@@ -19,8 +19,8 @@ DNAWrapper* parse_fasta(char * path){
   }
 
   int c; // getc will send a char as an int
-  int num_base = 0 ; // number of base that have been read.
-  int num_chunk = 0; 
+  unsigned int num_base = 0 ; // number of base that have been read.
+  unsigned int num_chunk = 0; 
   BD* bds ;
 
   char DNAsequence_chunk[12 + 1] = "            \0"; // the chunk that will fill a BD struct
@@ -128,7 +128,7 @@ struct genome * build_genome(){
 
 
   DNAWrapper** ws = malloc(0 * sizeof(DNAWrapper*)); // point to list of wrapper (one per fasta file)
-  int num_wrappers = 0 ; // number of file that havve been parsed
+  unsigned int num_wrappers = 0 ; // number of file that havve been parsed
 
   while ((dir = readdir(d)) != NULL) { // readdir send NULL if no more file to read
     printf("%s\n", dir->d_name);
@@ -138,7 +138,7 @@ struct genome * build_genome(){
       num_wrappers += 1 ;
 
       char filepath[strlen(dirpath) + strlen(dir->d_name) +1 ] ; 
-      int size_filepath = sprintf(filepath, "%s/%s",dirpath,dir->d_name);
+      unsigned int size_filepath = sprintf(filepath, "%s/%s",dirpath,dir->d_name);
       printf("%s\n", filepath);
 
 
@@ -173,7 +173,7 @@ struct genome * build_genome(){
 }
 
 
-BD* newBD(char* DNA_sequence, int len){
+BD* newBD(char* DNA_sequence, unsigned int len){
   BD* genome_chunk = malloc (sizeof (BD));
 
   genome_chunk->size = len + 1;
@@ -181,7 +181,7 @@ BD* newBD(char* DNA_sequence, int len){
 
   //printf("in newBD : string %s and its len is %d \n", DNA_sequence, len);
 
-  for (int i = 0; i < len; ++i){
+  for (unsigned int i = 0; i < len; ++i){
     //printf("%d, ", i);
     if (DNA_sequence[i] == 'A'){
       setBase(genome_chunk, i, A);
