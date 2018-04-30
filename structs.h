@@ -57,6 +57,7 @@ typedef struct  {
   unsigned int structIndex;
   unsigned int baseOffset;
   unsigned char hasEnded;
+  char* filePath;
 } DNAWrapper;
 
 typedef struct  {

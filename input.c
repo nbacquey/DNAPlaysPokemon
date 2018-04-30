@@ -142,6 +142,7 @@ struct genome * build_genome(){
       printf("filepath = %s \n", filepath);
 
       DNAWrapper* current_wrapper = parse_fasta(filepath);
+      current_wrapper->filePath = filepath;
       printf("&&&&&&&&&&&&&&&\nnum_wrapper = %d, num_base = %d : \n%s\n", num_wrappers, current_wrapper->totalSize, getNBases(current_wrapper, current_wrapper->totalSize));
 
       ws = realloc(ws, num_wrappers * sizeof(DNAWrapper*));
