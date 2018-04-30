@@ -21,7 +21,7 @@ DNAWrapper* parse_fasta(char * path){
   int c; // getc will send a char as an int
   unsigned int num_base = 0 ; // number of base that have been read.
   unsigned int num_chunk = 0; 
-  BD* bds ;
+  BD* bds = malloc(0 * sizeof(BD));
 
   char DNAsequence_chunk[12 + 1] = "            \0"; // the chunk that will fill a BD struct
   // +1 for the string end
@@ -132,24 +132,13 @@ struct genome * build_genome(){
 
   while ((dir = readdir(d)) != NULL) { // readdir send NULL if no more file to read
     printf("%s\n", dir->d_name);
-    if ( fnmatch( "Homo_sapiens.GRCh38.dna.chromosome.*.fa.gz" , dir->d_name , 0) == 0 ){
+    if ( fnmatch( "Homo_sapiens.GRCh38.dna.chromosome.*.fa" , dir->d_name , 0) == 0 ){
       printf("XXXX : %s\n", dir->d_name);
 
       num_wrappers += 1 ;
 
       char filepath[strlen(dirpath) + strlen(dir->d_name) +1 ] ; 
-      unsigned int size_filepath = sprintf(filepath, "%s/%s",dirpath,dir->d_name);
-      printf("%s\n", filepath);
-
-
-      char cmd[10 + 1 + size_filepath + 1]  ;  // "gunzip" + ' ' + gzfilepath + '\0'
-      strcpy( cmd, "gunzip -k " );
-      strcat( cmd, filepath);
-      printf("%s\n", cmd);
-      int status = system( cmd );
-
-
-      filepath[strlen(filepath)-3]=0 ; // - 3 = .gz  `\0
+      sprintf(filepath, "%s/%s",dirpath,dir->d_name);
       printf("filepath = %s \n", filepath);
 
       DNAWrapper* current_wrapper = parse_fasta(filepath);
