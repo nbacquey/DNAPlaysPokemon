@@ -9,6 +9,7 @@
 #include "transcript.h"
 #include "frequency.h"
 #include "keyHandler.h"
+#include "VBAInterface.h"
 
 void testN(){
   BD test1;
@@ -73,6 +74,18 @@ int main (int argc, char **argv){
   //testA();
 
   //testN();
+
+
+  genome * g = build_genome();
+  int next_btn;
+
+  for (int idx_wrapper = 0; idx_wrapper < g->num_wrappers; ++idx_wrapper){
+    DNAWrapper* current_w = g->wrappers[idx_wrapper];
+    while( (next_btn = get_next_btn(current_w)) != -1){
+      sendCommand(next_btn);
+      usleep(100); // 100 micro sec
+    }
+  }
   
   return 0;
   
