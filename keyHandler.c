@@ -30,6 +30,8 @@ int get_next_btn(DNAWrapper* wrapper){
 
 	int base1 = nextBase(wrapper);
 	int base2 = nextBase(wrapper);
+
+	if (base1 == -1 || base2 == -1) return -1 ; // no more duplet
 	
 	int index_in_BTN_CORRESPONDANCE = base1 * 4 + base2; 
 
