@@ -70,7 +70,7 @@ void testA(){
 int main (int argc, char **argv){
 
 
-  testA();
+  //testA();
 
   //testN();
   
