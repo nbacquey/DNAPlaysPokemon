@@ -83,7 +83,7 @@ int main (int argc, char **argv){
     DNAWrapper* current_w = g->wrappers[idx_wrapper];
     while( (next_btn = get_next_btn(current_w)) != -1){
       sendCommand(next_btn);
-      usleep(100); // 100 micro sec
+      usleep(THROTTLE/100);
     }
   }
   
