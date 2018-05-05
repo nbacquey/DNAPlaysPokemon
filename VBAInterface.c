@@ -5,14 +5,14 @@ char* windowCommand = "xdotool search --class VisualBoyAdvance";
 char* commandFormat = "xdotool key --window %d --delay %d %s";
 
 int delay[8] = {
-  100,    //UP
-  100,    //DOWN
-  100,    //A
-  100,    //B
-  100,    //LEFT
-  100,    //RIGHT
-  100,    //SELECT
-  100     //START
+  100/(THROTTLE/100),    //UP
+  100/(THROTTLE/100),    //DOWN
+  100/(THROTTLE/100),    //A
+  100/(THROTTLE/100),    //B
+  100/(THROTTLE/100),    //LEFT
+  100/(THROTTLE/100),    //RIGHT
+  100/(THROTTLE/100),    //SELECT
+  100/(THROTTLE/100)     //START
 };
 
 char* btnString[8] = {
