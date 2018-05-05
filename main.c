@@ -8,6 +8,7 @@
 #include "structs.h"
 #include "transcript.h"
 #include "frequency.h"
+#include "keyHandler.h"
 
 void testN(){
   BD test1;
@@ -49,6 +50,15 @@ void testA(){
 
 
   genome * g = build_genome();
+
+  // test get next button :
+  int btn;
+  btn = get_next_btn(g-> wrappers[0]);
+  printf("%d\n", btn);
+  btn = get_next_btn(g-> wrappers[0]);
+  printf("%d\n", btn);
+  //-------------
+
   occurencyMapper** mappers = mapGenome(g, 6);
   int i;
   for(i = 0; i < g->num_wrappers; ++i){
