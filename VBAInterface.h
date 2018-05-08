@@ -4,4 +4,4 @@ int findWindowID();
 
 void sendCommand(int commandCode);
 
-#define THROTTLE 1000
+#define THROTTLE 600

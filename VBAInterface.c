@@ -15,7 +15,7 @@ int delay[8] = {
   100/(THROTTLE/100)     //START
 };
 
-char* btnString[8] = {
+char* btnStrings[8] = {
   "Up",     //UP
   "Down",   //DOWN
   "A",      //A
@@ -39,6 +39,11 @@ int findWindowID(){
 
 void sendCommand(int commandCode){
   char* command = malloc(sizeof(char)*256);
-  sprintf(command,commandFormat,findWindowID(),delay[commandCode],btnString[commandCode]);
+  char* btnString = btnStrings[commandCode];
+  sprintf(command,commandFormat,findWindowID(),delay[commandCode],btnString);
   pclose(popen(command, "r"));
+  printf("\r           ");
+  fflush(stdout);
+  printf("\r%s",btnString);
+  fflush(stdout);
 }

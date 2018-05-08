@@ -54,9 +54,9 @@ void testA(){
 
   // test get next button :
   int btn;
-  btn = get_next_btn(g-> wrappers[0]);
+  btn = get_next_btn_2B(g-> wrappers[0]);
   printf("%d\n", btn);
-  btn = get_next_btn(g-> wrappers[0]);
+  btn = get_next_btn_2B(g-> wrappers[0]);
   printf("%d\n", btn);
   //-------------
 
@@ -68,7 +68,7 @@ void testA(){
 
 }
 
-int main2 (int argc, char **argv){
+int main(int argc, char **argv){
 
 
   //testA();
@@ -81,9 +81,9 @@ int main2 (int argc, char **argv){
 
   for (int idx_wrapper = 0; idx_wrapper < g->num_wrappers; ++idx_wrapper){
     DNAWrapper* current_w = g->wrappers[idx_wrapper];
-    while( (next_btn = get_next_btn(current_w)) != -1){
+    while( (next_btn = get_next_btn_3B(current_w)) != -1){
       sendCommand(next_btn);
-      usleep(THROTTLE/100);
+      usleep(100000/(THROTTLE/100));
     }
   }
   

@@ -11,4 +11,5 @@
 
 
 
-int get_next_btn(DNAWrapper* wrapper);
+int get_next_btn_2B(DNAWrapper* wrapper);
+int get_next_btn_3B(DNAWrapper* wrapper);
